@@ -29,7 +29,7 @@ function check_internet_connection() {
 function check_os_version() {
     local -r product_version=$(sw_vers | grep "ProductVersion" | awk '{print $2}')
     # Check whether running OS is Sonoma or Ventura
-    if [[ $product_version != "14"* ]] && [[ $product_version != "13"* ]]; then
+    if [[ $product_version != "14"* ]] && [[ $product_version != "13"* ]] && [[ $product_version != "15"* ]]; then
         show_error "This version ($product_version) is not tested yet."
         exit 1
     fi
