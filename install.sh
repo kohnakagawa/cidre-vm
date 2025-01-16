@@ -27,10 +27,16 @@ function check_internet_connection() {
 }
 
 function check_os_version() {
-    local -r product_version=$(sw_vers | grep "ProductVersion" | awk '{print $2}')
-    # Check whether running OS is Sonoma or Ventura
-    if [[ $product_version != "14"* ]] && [[ $product_version != "13"* ]] && [[ $product_version != "15"* ]]; then
-        show_error "This version ($product_version) is not tested yet."
+    local -r product_version=$(sw_vers -productVersion)
+    # Check whether running OS is between Ventura (13.x) and Sequoia (15.x)
+    if [[ $product_version =~ '^([0-9]+)' ]]; then
+        local -r major_version=${match[1]}
+        if (( major_version < 13 )) || (( major_version > 15 )); then
+            show_error "This version ($product_version) is not supported. Please run on macOS between Ventura (13.x) and Sequoia (15.x)."
+            exit 1
+        fi
+    else
+        show_error "Failed to get OS version information."
         exit 1
     fi
 }
